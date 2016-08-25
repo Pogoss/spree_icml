@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_icml'
-  s.version     = '3.1.0'
+  s.version     = '3.1.1'
   s.summary     = 'Spree export to ICML'
   s.description = 'Gem for export from spree to ICML for RetailCRM'
   s.required_ruby_version = '>= 2.1.0'

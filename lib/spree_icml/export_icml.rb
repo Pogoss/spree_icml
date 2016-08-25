@@ -6,8 +6,8 @@ class ExportIcml
         xml.shop {
           shop_name = Spree::Store.first && Spree::Store.first.name
           shop_url = Spree::Store.first.url
-          xml.name.text(shop_name)
-          xml.company.text(shop_name)
+          xml.name(shop_name)
+          xml.company(shop_name)
           xml.categories {
             Spree::Taxon.find_each do |t|
               cat_attributes = {id: t.id}
@@ -17,6 +17,7 @@ class ExportIcml
           }
           xml.offers {
             Spree::Variant.find_each do |v|
+              next unless v.options.present?
               xml.offer(id: v.id, product_id: v.product_id, quantity: v.stock_items.sum(:count_on_hand)){
                 xml.url.text("#{shop_url}/products/#{v.product_id}/#{v.options[:color] && v.options[:color][:slug]}")
                 xml.price.text(v.price)
@@ -29,11 +30,15 @@ class ExportIcml
                   image = shop_url + v.product.images.first.attachment.url
                 end
                 xml.picture.text(image) if image
-                xml.name.text(v.name)
+                xml.name.text("#{v.name} #{v.options[:color] && v.options[:color][:slug]} #{v.options[:size] && v.options[:size][:name]}")
                 xml.productName.text(v.name)
                 xml.param(name: 'артикул', code: 'sku').text(v.product.sku) if v.product.sku.present?
                 v.options.each do |option, values|
-                  xml.param(name: option.to_s, code: option.to_s).text(values[:name])
+                  if option == :color
+                    xml.param(name: option.to_s, code: option.to_s).text(values[:slug])
+                  else
+                    xml.param(name: option.to_s, code: option.to_s).text(values[:name])
+                  end
                 end
                 xml.vendor.text(shop_name)
                 xml.unit(code: 'pcs', name: 'штука', sym: 'шт.')
