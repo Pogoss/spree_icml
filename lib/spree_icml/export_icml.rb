@@ -32,7 +32,7 @@ class ExportIcml
                 xml.picture.text(image) if image
                 xml.name.text("#{v.name} #{v.options[:color] && v.options[:color][:slug]} #{v.options[:size] && v.options[:size][:name]}")
                 xml.productName.text(v.name)
-                xml.param(name: 'артикул', code: 'article').text(v.product.sku) if v.product.sku.present?
+                xml.param(name: 'артикул', code: 'article').text(v.sku) if v.sku.present?
                 v.options.each do |option, values|
                   if option == :color
                     xml.param(name: option.to_s, code: option.to_s).text(values[:slug])
