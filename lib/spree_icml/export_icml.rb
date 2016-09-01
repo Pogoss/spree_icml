@@ -18,7 +18,7 @@ class ExportIcml
           xml.offers {
             Spree::Variant.find_each do |v|
               next unless v.options.present?
-              xml.offer(id: v.id, product_id: v.product_id, quantity: v.stock_items.sum(:count_on_hand)){
+              xml.offer(id: v.id, productId: v.product_id, quantity: v.stock_items.sum(:count_on_hand)){
                 xml.url.text("#{shop_url}/products/#{v.product_id}/#{v.options[:color] && v.options[:color][:slug]}")
                 xml.price.text(v.price)
                 xml.purchasePrice.text(v.cost_price || v.price)
